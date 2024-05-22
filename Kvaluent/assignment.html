@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Customer</title>
+  <style>
+    /* Styling the button */
+    .add-customer-button {
+      background-color: #007bff; /* Blue color */
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-left: 25%;
+    }
+    
+    /* Styling the button on hover */
+    .add-customer-button:hover {
+      background-color: #0056b3; /* Darker blue color */
+    }
+    
+    /* Style for form labels */
+    label {
+      display: inline-block;
+      width: 150px; /* Adjust width as needed */
+      text-align: right;
+      margin-bottom: 5px;
+    }
+
+    /* Style for form inputs */
+    input[type="text"],
+    input[type="email"],
+    select {
+      width: calc(100% - 170px); /* Adjust width to fit label */
+      padding: 5px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    .form-container {
+      background: #fff;
+      width: 50%;
+      padding: 20px;
+      border-radius: 10px;
+      border: 2px solid lightblue;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-left: 23%;
+      margin-top: 5%;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 14px;
+      margin-left: 10px;
+    }
+
+    .customer-table {
+      width: 80%;
+      border-collapse: collapse;
+      /* margin-top: 20px;
+      margin-left: 10%; */
+      width: 100%;
+    }
+
+    .customer-table th, .customer-table td {
+      padding: 10px;
+      text-align: left;
+      border: 1px solid #ddd;
+     
+    }
+
+    /* .customer-table th {
+      background-color: #f2f2f2;
+      
+    } */
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <form id="customer-form">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name">
+        <span id="name-error" class="error-message"></span>
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email">
+        <span id="email-error" class="error-message"></span>
+      </div>
+      <div class="form-group">
+        <label for="contact">Contact No:</label>
+        <input type="text" id="contact" name="contact" placeholder="Enter your contact number">
+        <span id="contact-error" class="error-message"></span>
+      </div>
+      <div class="form-group">
+        <label for="account-type">Account Type:</label>
+        <select id="account-type" name="account-type">
+          <option value="" disabled selected>Select account type</option>
+          <option value="savings">Savings</option>
+          <option value="current">Current</option>
+          <option value="fixed">Fixed Deposit</option>
+        </select>
+        <span id="account-type-error" class="error-message"></span>
+      </div>
+      <button type="submit" name="submit" class="add-customer-button">Add Customer</button>
+    </form>
+  <br>
+
+  <table id="customer-table" class="customer-table" style="display: none;">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Contact No</th>
+        <th>Account Type</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+  <script>
+    const form = document.getElementById('customer-form');
+    const customerTable = document.getElementById('customer-table');
+    const tableBody = customerTable.getElementsByTagName('tbody')[0];
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const contact = document.getElementById('contact').value;
+      const accountType = document.getElementById('account-type').value;
+
+      let isValid = true;
+
+      // Validate name
+      if (!/^[a-zA-Z\s]+$/.test(name)) {
+        document.getElementById('name-error').textContent = 'Please enter only alphabets';
+        isValid = false;
+      } else {
+        document.getElementById('name-error').textContent = '';
+      }
+
+      // Validate email
+      if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+        document.getElementById('email-error').textContent = 'Please enter a valid email address';
+        isValid = false;
+      } else {
+        document.getElementById('email-error').textContent = '';
+      }
+
+      // Validate contact number
+      if (!/^[7-9]\d{9}$/.test(contact)) {
+        document.getElementById('contact-error').textContent = 'Please enter a valid 10-digit contact number starting with 7, 8, or 9';
+        isValid = false;
+      } else {
+        document.getElementById('contact-error').textContent = '';
+      }
+
+      // Validate account type
+      if (accountType === '') {
+        document.getElementById('account-type-error').textContent = 'Please select an account type';
+        isValid = false;
+      } else {
+        document.getElementById('account-type-error').textContent = '';
+      }
+
+      if (isValid) {
+        const customerData = {
+          name: name,
+          email: email,
+          contact: contact,
+          accountType: accountType
+        };
+
+        // Add customer data to the table
+        const row = document.createElement('tr');
+        Object.values(customerData).forEach(function(value) {
+          const cell = document.createElement('td');
+          cell.textContent = value;
+          row.appendChild(cell);
+        });
+        tableBody.appendChild(row);
+
+        // Show the table if it was hidden
+        customerTable.style.display = 'table';
+
+        // Clear the form fields
+        form.reset();
+      }
+    });
+  </script>
+</body>
+</html>
